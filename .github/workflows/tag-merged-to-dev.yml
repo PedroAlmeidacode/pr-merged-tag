@@ -36,23 +36,25 @@ jobs:
               console.log("no PR to tag");
               return;
             }
-            try {
-              await Promise.all([
-                github.rest.issues.addLabels({
-                  issue_number: data[0].number,
-                  owner,
-                  repo,
-                  labels: ["${{env.MERGED_TO_BRANCH_TAG}}"]
-                }),
-                github.rest.issues.removeLabel({
-                  issue_number: data[0].number,
-                  owner,
-                  repo,
-                  name: "${{env.NOT_MERGED_TO_BRANCH_TAG}}"
-                })
-              ]);
-            } catch(e){
-              console.log(e);
+            for(const pr of data){
+              try {
+                await Promise.all([
+                  github.rest.issues.addLabels({
+                    issue_number: pr.number,
+                    owner,
+                    repo,
+                    labels: ["${{env.MERGED_TO_BRANCH_TAG}}"]
+                  }),
+                  github.rest.issues.removeLabel({
+                    issue_number: pr.number,
+                    owner,
+                    repo,
+                    name: "${{env.NOT_MERGED_TO_BRANCH_TAG}}"
+                  })
+                ]);
+              } catch(e){
+                console.log(e);
+              }
             }
 
 

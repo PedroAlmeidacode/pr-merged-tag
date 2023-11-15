@@ -18,8 +18,12 @@ jobs:
           script: |
             console.log("context")
             console.log(context)
-            console.log("pull_request")
-            console.log(github.event.pull_request)
+
+      - name: print pull_request
+        env:
+          PULL_REQUEST: ${{ github.event.pull_request }}
+        run: echo "result= $PULL_REQUEST"
+
 
       - name: Check if PR is merged into dev
         id: check_merged
@@ -38,7 +42,7 @@ jobs:
       - name: print is_merged
         env:
           IS_MERGED: ${{ steps.check_merged.outputs.is_merged }}
-        run: echo "reult= $IS_MERGED"
+        run: echo "result= $IS_MERGED"
 
       - name: Add or remove label based on PR status
         if: steps.check_merged.outputs.is_merged != 'not_associated'

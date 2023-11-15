@@ -52,7 +52,7 @@ jobs:
           script: |
             const prCommit = context.payload.after;
 
-            const devCommits = await github.repos.listCommits({
+            const devCommits = await github.rest.repos.listCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
               sha: 'dev'

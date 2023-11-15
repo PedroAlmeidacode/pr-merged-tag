@@ -43,13 +43,13 @@ jobs:
                   issue_number: prNumber,
                   owner,
                   repo,
-                  labels: ['merged'],
-                });
+                  labels: ['merged']
+                }),
                 github.rest.issues.removeLabel({
                   issue_number: prNumber,
                   owner,
                   repo,
-                  name: 'not merged',
+                  name: 'not merged'
                 });
               ])
             } catch(e){
@@ -79,13 +79,13 @@ jobs:
                     issue_number: prNumber,
                     owner,
                     repo,
-                    labels: ['merged'],
-                  });
+                    labels: ['merged']
+                  }),
                   github.rest.issues.removeLabel({
                     issue_number: prNumber,
                     owner,
                     repo,
-                    name: 'not merged',
+                    name: 'not merged'
                   });
                 ])
               } else {
@@ -94,13 +94,13 @@ jobs:
                     issue_number: prNumber,
                     owner,
                     repo,
-                    labels: ['not merged'],
-                  });
+                    labels: ['not merged']
+                  }),
                   github.rest.issues.removeLabel({
                     issue_number: prNumber,
                     owner,
                     repo,
-                    name: 'merged',
+                    name: 'merged'
                   });            
                 ])
               }

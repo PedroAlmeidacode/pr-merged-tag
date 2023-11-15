@@ -16,7 +16,6 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            console.log("context")
             console.log(context)
 
       - name: Determine if push is to dev branch
@@ -30,17 +29,27 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const devCommit = context.payload.after;
-            const {data} = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-              commit_sha: context.payload.after,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
+            const commit_sha = context.payload.after;
+            const owner = context.repo.owner
+            const repo = context.repo.repo
+            const {data} = await github.rest.repos.listPullRequestsAssociatedWithCommit({ commit_sha, owner, repo })
             if(data.length == 0){
               throw new Error("No PR to tag")
             }
+            console.log(data)
 
-            console.log("tag with merge and rm unmerged")
+            github.rest.issues.addLabels({
+              issue_number: prNumber,
+              owner,
+              repo,
+              labels: ['merged'],
+            });
+            github.rest.issues.removeLabel({
+              issue_number: prNumber,
+              owner,
+              repo,
+              name: 'not merged',
+            });
 
 
 
@@ -51,16 +60,26 @@ jobs:
         with:
           script: |
             const prCommit = context.payload.after;
+            const prNumber = context.payload.pull_request.number
+            const owner = context.repo.owner
+            const repo = context.repo.repo
 
-            const devCommits = await github.rest.repos.listCommits({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: 'dev'
-            });
+            const devCommits = await github.rest.repos.listCommits({ owner, repo, sha: 'dev' });
 
             const commitExistsInDev = devCommits.data.some(commit => commit.sha === prCommit);
             if(commitExistsInDev){
-              console.log("tag with merge and rm unmerged")
+              github.rest.issues.addLabels({
+                issue_number: prNumber,
+                owner,
+                repo,
+                labels: ['unmerge'],
+              });
+              github.rest.issues.removeLabel({
+                issue_number: prNumber,
+                owner,
+                repo,
+                name: 'merged',
+              });
             }else{
               console.log("tag with unmerge and rm merged")
             }

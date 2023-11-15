@@ -1,7 +1,7 @@
 name: Update PR Status
 env:
-  MERGED_TO_BRANCH_TAG: 'merged-into-dev'
-  NOT_MERGED_TO_BRANCH_TAG: 'not-merged-into-dev'
+  MERGED_TO_BRANCH_TAG: merged-into-dev
+  NOT_MERGED_TO_BRANCH_TAG: not-merged-into-dev
 
 on:
   pull_request:

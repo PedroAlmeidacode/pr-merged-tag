@@ -30,12 +30,12 @@ jobs:
         with:
           script: |
             const commit_sha = context.payload.after;
-            const owner = context.repo.owner
-            const repo = context.repo.repo
-            const {data} = await github.rest.repos.listPullRequestsAssociatedWithCommit({ commit_sha, owner, repo })
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const {data} = await github.rest.repos.listPullRequestsAssociatedWithCommit({ commit_sha, owner, repo });
             if(data.length == 0){
-              console.log("no PR to tag")
-              return
+              console.log("no PR to tag");
+              return;
             }
             try {
               await Promise.all([
@@ -50,10 +50,10 @@ jobs:
                   owner,
                   repo,
                   name: 'not merged'
-                });
-              ])
+                })
+              ]);
             } catch(e){
-              console.log(e)
+              console.log(e);
             }
 
 
@@ -65,9 +65,9 @@ jobs:
         with:
           script: |
             const prCommit = context.payload.after;
-            const prNumber = context.payload.pull_request.number
-            const owner = context.repo.owner
-            const repo = context.repo.repo
+            const prNumber = context.payload.pull_request.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
 
             const devCommits = await github.rest.repos.listCommits({ owner, repo, sha: 'dev' });
 
@@ -86,8 +86,8 @@ jobs:
                     owner,
                     repo,
                     name: 'not merged'
-                  });
-                ])
+                  })
+                ]);
               } else {
                 await Promise.all([
                   github.rest.issues.addLabels({
@@ -101,11 +101,11 @@ jobs:
                     owner,
                     repo,
                     name: 'merged'
-                  });            
-                ])
+                  })    
+                ]);
               }
             } catch(e){
-              console.log(e)
+              console.log(e);
             }
 
           

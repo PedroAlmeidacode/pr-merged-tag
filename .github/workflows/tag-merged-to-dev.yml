@@ -73,16 +73,27 @@ jobs:
                 issue_number: prNumber,
                 owner,
                 repo,
-                labels: ['unmerge'],
+                labels: ['merged'],
+              });
+              github.rest.issues.removeLabel({
+                issue_number: prNumber,
+                owner,
+                repo,
+                name: 'not merged',
+              });
+            }else{
+              github.rest.issues.addLabels({
+                issue_number: prNumber,
+                owner,
+                repo,
+                labels: ['not merged'],
               });
               github.rest.issues.removeLabel({
                 issue_number: prNumber,
                 owner,
                 repo,
                 name: 'merged',
-              });
-            }else{
-              console.log("tag with unmerge and rm merged")
+              });            
             }
 
           

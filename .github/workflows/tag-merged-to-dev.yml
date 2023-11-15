@@ -26,7 +26,6 @@ jobs:
 
 
       - name: Determine if equal to an open pr last commit
-        if: ${{steps.is_dev_branch.outputs.is_dev == 'true'}}
         uses: actions/github-script@v6
         with:
           script: |

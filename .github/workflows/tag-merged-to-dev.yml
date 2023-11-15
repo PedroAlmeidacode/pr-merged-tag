@@ -25,13 +25,15 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const commitSHA = github.context.payload.after;
-            const repo = github.context.repo;
+            const ref = context.payload.after;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            console.log(ref)
+            console.log(owner)
+            console.log(repo)
+
             
-            const { data: pullRequest } = await github.rest.repos.getCommit({
-              ...repo,
-              ref: commitSHA,
-            });
+            const { data: pullRequest } = await github.rest.repos.getCommit({owner, repo, ref});
   
             const prNumber = pullRequest.pull_request ? pullRequest.pull_request.number : null;
   

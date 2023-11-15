@@ -42,13 +42,13 @@ jobs:
                   issue_number: data[0].number,
                   owner,
                   repo,
-                  labels: [${{env.MERGED_TO_BRANCH_TAG}}]
+                  labels: ["${{env.MERGED_TO_BRANCH_TAG}}"]
                 }),
                 github.rest.issues.removeLabel({
                   issue_number: data[0].number,
                   owner,
                   repo,
-                  name: ${{env.NOT_MERGED_TO_BRANCH_TAG}}
+                  name: "${{env.NOT_MERGED_TO_BRANCH_TAG}}"
                 })
               ]);
             } catch(e){
@@ -78,13 +78,13 @@ jobs:
                     issue_number: prNumber,
                     owner,
                     repo,
-                    labels: [${{env.MERGED_TO_BRANCH_TAG}}]
+                    labels: ["${{env.MERGED_TO_BRANCH_TAG}}"]
                   }),
                   github.rest.issues.removeLabel({
                     issue_number: prNumber,
                     owner,
                     repo,
-                    name: ${{env.NOT_MERGED_TO_BRANCH_TAG}}
+                    name: "${{env.NOT_MERGED_TO_BRANCH_TAG}}"
                   })
                 ]);
               } else {
@@ -93,13 +93,13 @@ jobs:
                     issue_number: prNumber,
                     owner,
                     repo,
-                    labels: [${{env.NOT_MERGED_TO_BRANCH_TAG}}]
+                    labels: ["${{env.NOT_MERGED_TO_BRANCH_TAG}}"]
                   }),
                   github.rest.issues.removeLabel({
                     issue_number: prNumber,
                     owner,
                     repo,
-                    name: ${{env.MERGED_TO_BRANCH_TAG}}
+                    name: "${{env.MERGED_TO_BRANCH_TAG}}"
                   })    
                 ]);
               }

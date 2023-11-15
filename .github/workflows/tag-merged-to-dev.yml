@@ -26,7 +26,7 @@ jobs:
 
 
       - name: Determine if any pr open with this commit
-        if: ${{steps.is_dev_branch.outputs.is_dev != 'true'}}
+        if: ${{steps.is_dev_branch.outputs.is_dev == 'true'}}
         uses: actions/github-script@v6
         with:
           script: |

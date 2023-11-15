@@ -38,18 +38,20 @@ jobs:
               return
             }
             try {
-              github.rest.issues.addLabels({
-                issue_number: prNumber,
-                owner,
-                repo,
-                labels: ['merged'],
-              });
-              github.rest.issues.removeLabel({
-                issue_number: prNumber,
-                owner,
-                repo,
-                name: 'not merged',
-              });
+              await Promise.all([
+                github.rest.issues.addLabels({
+                  issue_number: prNumber,
+                  owner,
+                  repo,
+                  labels: ['merged'],
+                });
+                github.rest.issues.removeLabel({
+                  issue_number: prNumber,
+                  owner,
+                  repo,
+                  name: 'not merged',
+                });
+              ])
             } catch(e){
               console.log(e)
             }
@@ -72,31 +74,35 @@ jobs:
             const commitExistsInDev = devCommits.data.some(commit => commit.sha === prCommit);
             try {
               if(commitExistsInDev){
-                github.rest.issues.addLabels({
-                  issue_number: prNumber,
-                  owner,
-                  repo,
-                  labels: ['merged'],
-                });
-                github.rest.issues.removeLabel({
-                  issue_number: prNumber,
-                  owner,
-                  repo,
-                  name: 'not merged',
-                });
-              }else{
-                github.rest.issues.addLabels({
-                  issue_number: prNumber,
-                  owner,
-                  repo,
-                  labels: ['not merged'],
-                });
-                github.rest.issues.removeLabel({
-                  issue_number: prNumber,
-                  owner,
-                  repo,
-                  name: 'merged',
-                });            
+                await Promise.all([
+                  github.rest.issues.addLabels({
+                    issue_number: prNumber,
+                    owner,
+                    repo,
+                    labels: ['merged'],
+                  });
+                  github.rest.issues.removeLabel({
+                    issue_number: prNumber,
+                    owner,
+                    repo,
+                    name: 'not merged',
+                  });
+                ])
+              } else {
+                await Promise.all([
+                  github.rest.issues.addLabels({
+                    issue_number: prNumber,
+                    owner,
+                    repo,
+                    labels: ['not merged'],
+                  });
+                  github.rest.issues.removeLabel({
+                    issue_number: prNumber,
+                    owner,
+                    repo,
+                    name: 'merged',
+                  });            
+                ])
               }
             } catch(e){
               console.log(e)

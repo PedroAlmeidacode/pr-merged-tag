@@ -71,6 +71,8 @@ jobs:
             const devCommits = await github.rest.repos.listCommits({ owner, repo, sha: 'dev' });
 
             const commitExistsInDev = devCommits.data.some(commit => commit.sha === prCommit);
+            console.log(`Out commit: ${prCommit}`)
+            console.log(`Commit exists in dev ? ${commitExistsInDev}`)
             try {
               if(commitExistsInDev){
                 await Promise.all([
@@ -88,6 +90,8 @@ jobs:
                   })
                 ]);
               } else {
+                console.log("dev commits")
+                console.log(devCommits.map(c => c.sha))
                 await Promise.all([
                   github.rest.issues.addLabels({
                     issue_number: prNumber,

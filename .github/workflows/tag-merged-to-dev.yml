@@ -71,7 +71,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const prCommit = context.payload.after ?? context.sha;
+            const prCommit = context.payload.after ?? context.payload.pull_request.statuses_url.split("/").pop();
             const prNumber = context.payload.pull_request.number;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
@@ -98,8 +98,6 @@ jobs:
                   })
                 ]);
               } else {
-                console.log("dev commits")
-                console.log(devCommits.map(c => c.sha))
                 await Promise.all([
                   github.rest.issues.addLabels({
                     issue_number: prNumber,

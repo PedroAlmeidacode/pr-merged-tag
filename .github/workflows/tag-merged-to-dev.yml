@@ -19,29 +19,18 @@ jobs:
             console.log("context")
             console.log(context)
 
+      - name: Determine if push is to dev branch
+        id: is_dev_branch
+        run: echo "::set-output name=is_dev::${{ startsWith(github.ref, 'refs/heads/dev') }}"
 
-      - name: Get PR number if any
-        id: check_commit
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const issueNumber = context.issue.number
-            const ref = context.payload.after;
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            console.log(issueNumber)
-            console.log(ref)
-            console.log(owner)
-            console.log(repo)
 
-            
-            const { data: pullRequest } = await github.rest.repos.getCommit({owner, repo, ref});
-  
-            const prNumber = pullRequest.pull_request ? pullRequest.pull_request.number : null;
-  
-            console.log(`::set-output name=pr_number::${prNumber}`);
-          
-      - name: Output pr number
-        run: echo "PR number? ${{ steps.check_commit.outputs.pr_number }}"
+
+      - name: Determine if equal to an open pr last commit
+        if: ${{steps.is_dev_branch.outputs.is_dev == 'true'}}
+        run: echo "is dev"
+
+      - name: Determine if equal to an open pr last commit
+        if: ${{steps.is_dev_branch.outputs.is_dev != 'true'}}
+        run: echo "is not dev"
 
     

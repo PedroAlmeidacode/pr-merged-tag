@@ -25,9 +25,11 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            const issueNumber = context.issue.number
             const ref = context.payload.after;
             const owner = context.repo.owner;
             const repo = context.repo.repo;
+            console.log(issueNumber)
             console.log(ref)
             console.log(owner)
             console.log(repo)

@@ -1,0 +1,79 @@
+name: Update PR Status
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  push:
+    branches:
+      - 'dev'
+
+jobs:
+  update_pr_status:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Printing the current context
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log("context")
+            console.log(context)
+            console.log("pull_request")
+            console.log(github.event.pull_request)
+
+      - name: Check if PR is merged into dev
+        id: check_merged
+        run: |
+          if [[ -n "${{ github.event.pull_request }}" ]]; then
+            if [[ "$( git cherry dev | wc -l | tr -d ' ' )" == "0" ]]; then
+              echo "::set-output name=is_merged::true"
+            else
+              echo "::set-output name=is_merged::false"
+            fi
+          else
+            # No pull request associated with this event
+            echo "::set-output name=is_merged::not_associated"
+          fi
+
+      - name: print is_merged
+        env:
+          IS_MERGED: ${{ steps.check_merged.outputs.is_merged }}
+        run: echo "reult= $IS_MERGED"
+
+      - name: Add or remove label based on PR status
+        if: steps.check_merged.outputs.is_merged != 'not_associated'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const isMerged = "${{ steps.check_merged.outputs.is_merged }}" === 'true';
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = context.issue.number;
+
+            if (isMerged) {
+              github.rest.issues.addLabels({
+                issue_number: prNumber,
+                owner,
+                repo,
+                labels: ['merged-into-dev'],
+              }).catch(e => console.log("Failed to add label:", e));
+              github.rest.issues.removeLabel({
+                issue_number: prNumber,
+                owner,
+                repo,
+                name: 'not-merged-into-dev',
+              }).catch(e => console.log("Failed to remove label:", e));
+            } else {
+              github.rest.issues.addLabels({
+                issue_number: prNumber,
+                owner,
+                repo,
+                labels: ['not-merged-into-dev'],
+              }).catch(e => console.log("Failed to add label:", e));
+              github.rest.issues.removeLabel({
+                issue_number: prNumber,
+                owner,
+                repo,
+                name: 'merged-into-dev',
+              }).catch(e => console.log("Failed to remove label:", e));
+            }

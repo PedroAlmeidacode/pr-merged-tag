@@ -26,18 +26,22 @@ jobs:
 
 
       - name: Determine if equal to an open pr last commit
+        if: ${{steps.is_dev_branch.outputs.is_dev == 'true'}}
         uses: actions/github-script@v6
         with:
           script: |
             const devCommit = context.payload.after;
+            const commitSha = context.sha
             console.log("devCommit")
             console.log(devCommit)
-            const res = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+            console.log("commitSha")
+            console.log(commitSha)
+            const {data} = await github.rest.repos.listPullRequestsAssociatedWithCommit({
               commit_sha: context.sha,
               owner: context.repo.owner,
               repo: context.repo.repo,
             })
-            console.log(res)
+            console.log(data)
 
 
 

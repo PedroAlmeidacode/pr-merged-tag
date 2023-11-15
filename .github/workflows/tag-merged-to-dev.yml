@@ -39,6 +39,7 @@ jobs:
               console.log("no PR to tag");
               return;
             }
+            console.log(data)
             try {
               await Promise.all([
                 github.rest.issues.addLabels({

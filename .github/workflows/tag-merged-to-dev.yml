@@ -39,17 +39,16 @@ jobs:
               console.log("no PR to tag");
               return;
             }
-            console.log(data)
             try {
               await Promise.all([
                 github.rest.issues.addLabels({
-                  issue_number: prNumber,
+                  issue_number: data[0].number,
                   owner,
                   repo,
                   labels: ['merged']
                 }),
                 github.rest.issues.removeLabel({
-                  issue_number: prNumber,
+                  issue_number: data[0].number,
                   owner,
                   repo,
                   name: 'not merged'

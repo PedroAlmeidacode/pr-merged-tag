@@ -27,9 +27,24 @@ jobs:
 
       - name: Determine if equal to an open pr last commit
         if: ${{steps.is_dev_branch.outputs.is_dev == 'true'}}
-        run: echo "is dev"
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const devCommit = context.payload.after;
+            console.log("devCommit")
+            console.log(devCommit)
+            const openPRs = await github.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open'
+            });
+            console.log("openPRs")
+            console.log(openPRs)
+            const match = openPRs.data.some(pr => pr.head.sha === devCommit);
+            console.log(match)
 
-      - name: Determine if equal to an open pr last commit
+
+      - name: Determine if all the commits in the pr exist in dev
         if: ${{steps.is_dev_branch.outputs.is_dev != 'true'}}
         run: echo "is not dev"
 

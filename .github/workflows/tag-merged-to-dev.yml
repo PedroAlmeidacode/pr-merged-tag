@@ -19,16 +19,11 @@ jobs:
             console.log("context")
             console.log(context)
 
-      - name: print pull_request
-        env:
-          PULL_REQUEST: ${{ github.event.pull_request }}
-        run: echo "result= $PULL_REQUEST"
-
 
       - name: Check if PR is merged into dev
         id: check_merged
         run: |
-          if [[ -n "${{ github.event.pull_request }}" ]]; then
+          if git rev-parse --quiet --verify HEAD^0; then
             if [[ "$( git cherry dev | wc -l | tr -d ' ' )" == "0" ]]; then
               echo "::set-output name=is_merged::true"
             else

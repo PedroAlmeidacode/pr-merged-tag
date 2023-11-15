@@ -71,7 +71,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const prCommit = context.payload.after;
+            const prCommit = context.payload.after ?? context.sha;
             const prNumber = context.payload.pull_request.number;
             const owner = context.repo.owner;
             const repo = context.repo.repo;

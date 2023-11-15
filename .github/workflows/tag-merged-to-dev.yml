@@ -38,6 +38,13 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const {data} = await github.rest.repos.listPullRequestsAssociatedWithCommit({ commit_sha, owner, repo });
+
+            console.log(JSON.stringify(context.payload.commits, null, 2))
+
+            // when there is a merge confit commit_sha doesnt get the right sha
+            // context.payload.commits has two objects, one of them should be the commit sha that we want to
+            // put in the previous call
+
             if(data.length == 0){
               console.log("no PR to tag");
               return;

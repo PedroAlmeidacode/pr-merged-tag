@@ -34,7 +34,8 @@ jobs:
             const repo = context.repo.repo
             const {data} = await github.rest.repos.listPullRequestsAssociatedWithCommit({ commit_sha, owner, repo })
             if(data.length == 0){
-              throw new Error("No PR to tag")
+              console.log("no PR to tag")
+              return
             }
             console.log(data)
 

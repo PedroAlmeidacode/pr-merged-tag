@@ -36,7 +36,7 @@ jobs:
             console.log("commitSha")
             console.log(commitSha)
             const {data} = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-              commit_sha: context.sha,
+              commit_sha: devCommit,
               owner: context.repo.owner,
               repo: context.repo.repo,
             })

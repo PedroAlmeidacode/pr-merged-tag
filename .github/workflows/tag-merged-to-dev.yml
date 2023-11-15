@@ -17,6 +17,12 @@ jobs:
 
 
     steps:
+      - name: Printing the current context
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log(context)
+
       - name: Determine if push is to dev branch
         id: is_dev_branch
         run: echo "::set-output name=is_dev::${{ startsWith(github.ref, 'refs/heads/dev') }}"

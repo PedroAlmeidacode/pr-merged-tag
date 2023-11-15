@@ -40,7 +40,8 @@ jobs:
             const {data} = await github.rest.repos.listPullRequestsAssociatedWithCommit({ commit_sha, owner, repo });
 
 
-            // when there is a merge confit context.payload.commits has two objects, one of them should be the commit sha that we want to
+            // when there is a merge confit commit_sha doesnt get the right sha
+            // context.payload.commits has two objects, one of them should be the commit sha that we want to
             // put in the previous call
 
             if(data.length == 0){
